@@ -1,0 +1,81 @@
+#include<stdio.h>
+#include<malloc.h>
+#define ERROR 0
+#define OK 1
+#define ElemType int
+
+typedef int Status;
+typedef struct LNode
+{
+ int data;
+ struct LNode *next;
+}LNode,*LinkList;
+
+int CreateLink_L(LinkList &L,int n){
+// 创建含有n个元素的单链表
+  LinkList p,q;
+  int i;
+  ElemType e;
+  L = (LinkList)malloc(sizeof(LNode));
+  L->next = NULL;              // 先建立一个带头结点的单链表
+  q = (LinkList)malloc(sizeof(LNode));
+  q = L;
+  for (i=0; i<n; i++) {
+	 scanf("%d", &e);
+    p = (LinkList)malloc(sizeof(LNode));  // 生成新结点
+    p->data=e;
+    p->next=q->next;
+    q->next=p;
+    q=p;
+  }
+  return OK;
+}
+
+int LoadLink_L(LinkList &L){
+// 单链表遍历
+ LinkList p = L->next;
+ if(p==NULL)printf("The List is empty!");
+ else
+ {
+	 while(p)
+	 {
+		printf("%d ",p->data);
+		p=p->next;
+	 }
+ }
+ printf("\n");
+ return OK;
+}
+
+int invert_link(LinkList &L){
+    LinkList l1=NULL;
+    LinkList l2=NULL;
+    LinkList head=L;
+    L=L->next;
+    LinkList p=head->next;
+    while(p->next!=NULL) p=p->next;
+    head->next=p;//将头节点指向最末位
+    while(L->next!=NULL)
+	{
+		l1=L->next;
+		L->next=l2;
+		l2=L;
+		L=l1;
+	}
+	L->next=l2;
+	L=head;
+    return OK;
+}
+
+int main()
+{
+    int i;
+    scanf("%d",&i);
+    LinkList L;
+    CreateLink_L(L,i);
+    printf("The List is:");
+    LoadLink_L(L);
+    invert_link(L);
+    printf("The turned List is:");
+    LoadLink_L(L);
+}
