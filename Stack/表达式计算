@@ -1,0 +1,218 @@
+typedef int Status;
+typedef char SElemType;
+typedef double SElemType2;
+#include"malloc.h"
+#include"stdio.h"
+#include"math.h"
+#include"stdlib.h"
+#include"string.h"
+#define OK              1
+#define ERROR           0
+#define TRUE            1
+#define FALSE           0
+#define STACK_INIT_SIZE 10 //存储空间初始分配量
+#define STACKINCREMENT  2  //存储空间分配增量
+
+struct SqStack       //运算符型的
+{
+	SElemType * base;
+	SElemType * top;
+	int stacksize;
+};
+
+struct SqStack2		 //运算数型的
+{
+	SElemType2 * base;
+	SElemType2 * top;
+	int stacksize;
+};
+
+Status InitStack(SqStack &S)   //运算符栈的初始化操作
+{
+	S.base = (SElemType *)malloc(STACK_INIT_SIZE * sizeof(SElemType));
+	if(!S.base) exit(-2);
+	S.top = S.base;
+	S.stacksize = STACK_INIT_SIZE;
+	return OK;
+}
+
+Status InitStack2(SqStack2 &S)  //运算数栈的初始化操作
+{
+	S.base = (SElemType2 *)malloc(STACK_INIT_SIZE * sizeof(SElemType2));
+	if(!S.base) exit(-2);
+	S.top = S.base;
+	S.stacksize = STACK_INIT_SIZE;
+	return OK;
+}
+
+Status Push(SqStack &S, SElemType e)  //运算符栈的进栈操作
+{
+	if(S.top - S.base >= S.stacksize)
+	{
+		S.base = (SElemType *)realloc(S.base,(S.stacksize + STACKINCREMENT) * sizeof (SElemType));
+		if(!S.base) exit(-2);
+		S.top = S.base + S.stacksize;
+		S.stacksize += STACKINCREMENT;
+	}
+	* S.top = e;
+	S.top ++;
+	return OK;
+}
+
+Status Push2(SqStack2 &S, SElemType2 e)  //运算数栈的进栈操作
+{
+	if(S.top - S.base >= S.stacksize)
+	{
+		S.base = (SElemType2 *)realloc(S.base,(S.stacksize + STACKINCREMENT) * sizeof (SElemType2));
+		if(!S.base) exit(-2);
+		S.top = S.base + S.stacksize;
+		S.stacksize += STACKINCREMENT;
+	}
+	* S.top = e;
+	S.top ++;
+	return OK;
+}
+
+Status In(char c)   //判断是否为运算符，是运算符则返回 TRUE, 否则返回 FALSE
+{
+	if(c == '+' || c == '-' || c == '*' || c == '/' || c == '(' || c == ')' || c == '=') return TRUE;
+	else return FALSE;
+}
+
+SElemType GetTop(SqStack S)  //返回运算符栈的栈顶元素
+{
+	SElemType *p;
+	p = S.top;
+	p--;
+	if(S.base == S.top) return ERROR;
+	return(*p);
+}
+
+SElemType2 GetTop2(SqStack2 S)  //返回运算数栈的栈顶元素
+{
+	SElemType2 *p;
+	if(S.base == S.top) return ERROR;
+	p = S.top;
+	p--;
+	return(*p);
+}
+
+Status Pop(SqStack &S, SElemType &e)  //运算符栈的退栈操作
+{
+	if(S.top == S.base) return ERROR;
+	S.top --;
+	e = * S.top;
+	return OK;
+}
+
+Status Pop2(SqStack2 &S, SElemType2 &e)	//运算数栈的退栈操作
+{
+	if(S.top == S.base) return ERROR;
+	S.top --;
+	e = * S.top;
+	return OK;
+}
+
+
+//判定运算符栈的栈顶运算符 op1 与读入的运算符 op2 之间有限关系的函数
+//这个函数颇蠢，看了别人写的感觉简单明了，不过懒得改了
+char s[7][7]={
+      '>','>','<','<','<','>','>',
+	  '>','>','<','<','<','>','>',
+	  '>','>','>','>','<','>','>',
+	  '>','>','>','>','<','>','>',
+	  '<','<','<','<','<','=',' ',
+	  '>','>','>','>',' ','>','>',
+	  '<','<','<','<','<',' ','='
+	  };
+
+    char t[7]={'+','-','*','/','(',')','='};
+
+char Precede(char a,char b){
+	  int c,d;
+	  for(int i=0;i<7;i++){
+        if(a==t[i]) c=i;
+        if(b==t[i]) d=i;
+	  }
+      return s[c][d];
+    }
+
+double Operate(SElemType2 a, SElemType theta, SElemType2 b) //四则运算 a,b为运算数theta 为运算符。
+{															//形式为 a theta b
+	double an;
+	switch(theta)
+	{
+	case'+':an = a + b; break;
+	case'-':an = a - b; break;
+	case'*':an = a * b; break;
+	case'/':an = a / b; break;
+	}
+	return(an);   //注意返回值为double型
+}
+/////////////////////////////////////////////////////////////
+//这里要考虑到输入的表达式中有两位数及以上的情况
+//如该表达式   12*123=
+//但表达式又是以字符的形式一个一个字符的接收
+//即'1','2'是分开的,不是一下子接收'12'
+//故而要加一段代码，主要思想为:
+//在接收到一个数字的时候
+//先暂存起来
+//接收下一个看看是不是还是数字
+//是的话就要和前面这个组合起来
+//一旦下一个不是，就用atof 将TempData中的字符转为double型数据
+/////////////////////////////////////////////////////////////
+
+SElemType2 EvaluateExpression()
+{
+	SqStack OPTR;
+	SqStack2 OPND;
+	InitStack(OPTR);Push(OPTR, '=');  //其实'='就是书中的'#'。
+	InitStack2(OPND);
+	SElemType MyExpression[80];
+	SElemType TempData[10];//TempData用来暂存还是字符型时期的“数字”
+						   //如3*（9-7）= 中的3,9,7 只是这时还是字符型
+	char ch;
+	char theta, x;
+	double Data, a, b;
+	int i = 0;			 //数组TempData的下标
+	ch=getchar();    //令p指向字符型数组MyExpression
+	//当读入的字符为'=' 且运算符栈OPTR的栈顶元素为'='是，结束该循环.
+	//书中以'#'='#'作为结束的标志，这里以'='='='作为结束的标志
+	while(ch != '=' || GetTop(OPTR) != '=')
+	{
+		if(!In(ch))		       //判断p指向的字符是否为运算符
+		{
+			TempData[i] = ch;  //接受到一个数字的时候，暂存入TempData
+			ch=getchar();			   //接收下一个
+			++i;
+			if(In(ch))		          //一旦下一个不是
+			{
+				TempData[i] = '\0';   //就立即给TempData中暂存的数字最后加上结束符
+				Data=atof(TempData);  //atof  功能为：把字符串转换成浮点数  暂存入Data中
+				Push2(OPND, Data); 	  //将Data入栈
+				i = 0;				  //归零
+			}
+		}
+		else
+			switch (Precede(GetTop(OPTR), ch))
+			{
+				case '<':Push(OPTR,ch);	//栈顶元素优先权低
+				         ch=getchar(); break;
+				case '=':Pop(OPTR,x);	//脱括号
+						 ch=getchar(); break;
+				case '>':Pop(OPTR, theta);//运算符栈的栈顶元素退栈，进行Operate运算，并将运算结果入栈
+						 Pop2(OPND, b); Pop2(OPND, a);
+						 Push2(OPND, Operate(a, theta, b));
+						 break;
+			}
+
+	}
+	return GetTop2(OPND);
+}
+
+int main(void)
+{
+	printf("%g\n",EvaluateExpression());
+	return 0;
+
+}
