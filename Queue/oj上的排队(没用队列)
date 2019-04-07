@@ -1,0 +1,46 @@
+#include<stdio.h>
+#include<stdlib.h>
+
+typedef struct{
+    int arrivetime;
+    int usetime;
+}time;
+
+double ave_wait_time(int num,time t[]){
+    double ave=0,waittime[num],run_time;
+    int i;
+    for(i=0;i<num;i++){
+        if(i==0){
+            waittime[i]=0;
+            run_time=t[i].arrivetime+t[i].usetime;
+            }
+        else{
+            if(t[i].arrivetime<run_time){
+                waittime[i]=run_time-t[i].arrivetime;
+                run_time+=t[i].usetime;
+                }
+             else{
+                waittime[i]=0;
+                run_time=t[i].usetime+t[i].arrivetime;
+             }
+
+        }
+
+    }
+    for(int j=0;j<num;j++){
+        ave+=waittime[j]/num;
+    }
+    return ave;
+}
+
+main(){
+    int num;
+    scanf("%d",&num);
+    int j;
+    time t[num];
+    for(j=0;j<num;j++){
+        scanf("%d %d",&t[j].arrivetime,&t[j].usetime);
+    }
+    double a=ave_wait_time(num,t);
+    printf("%.2lf",a);
+}
