@@ -68,7 +68,15 @@ Status PostOrderTraverse( BiTree T ) {
         return OK;
 } // PostOrderTraverse
 
-
+Status PrintTree(BiTree T,int nLayer){
+ int i;
+ if(T==NULL) return ERROR;
+ PrintTree(T->rchild,nLayer+1);
+ for(i=0;i<nLayer;i++)
+  printf("  ");
+ printf("%c\n",T->data);
+ PrintTree(T->lchild,nLayer+1);
+ }
 
 int main()   //主函数
 {
@@ -79,4 +87,7 @@ int main()   //主函数
     InOrderTraverse(T);
     printf("\n");
     PostOrderTraverse(T);
+    printf("\n");
+    int nlayer=0;
+    PrintTree(T,nlayer);
  }//main
