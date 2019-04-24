@@ -1,0 +1,26 @@
+#include <stdio.h>
+
+main(){
+    int n;
+    int i,j,m,s;
+    scanf("%d",&n);
+    int k[n];
+    for(i=0;i<n;i++){
+        scanf("%d",&k[i]);
+    }
+    int temp;
+    for(j=1;j<n;j++){
+        if(k[j]<k[j-1]){
+            temp=k[j];
+            k[j]=k[j-1];
+            for(m=j-2;temp<k[m]&&m>=0;m--){
+                k[m+1]=k[m];
+            }
+            k[m+1]=temp;
+        }
+        for(s=0;s<n;s++){
+            printf("%d ",k[s]);
+        }
+        printf("\n");
+    }
+}
