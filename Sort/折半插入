@@ -1,0 +1,32 @@
+#include <stdio.h>
+
+main(){
+    int n;
+    int i,j,m,s;
+    int low,high,ave;
+    scanf("%d",&n);
+    int k[n];
+    for(i=0;i<n;i++){
+        scanf("%d",&k[i]);
+    }
+    int temp;
+    for(j=1;j<n;j++){
+            temp=k[j];
+            low=0;
+            high=j-1;
+            while(low<=high){
+                ave=(low+high)/2;
+                if(temp<k[ave]) high=ave-1;
+                else low=ave+1;
+            }
+            for(m=j-1;m>=high+1;m--){
+                k[m+1]=k[m];
+            }
+            k[high+1]=temp;
+
+        for(s=0;s<n;s++){
+            printf("%d ",k[s]);
+        }
+        printf("\n");
+    }
+}
