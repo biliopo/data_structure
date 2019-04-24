@@ -1,0 +1,40 @@
+#include <stdio.h>
+
+int n;
+
+int Partition(int k[],int low,int high){
+    int temp;
+    temp=k[low];
+    while(low<high){
+        while(low<high&&k[high]>=temp)
+        high--;
+        k[low]=k[high];
+        while(low<high&&k[low]<=temp)
+        low++;
+        k[high]=k[low];
+    }
+    k[low]=temp;
+    for(int i=0;i<n;i++){
+        printf("%d ",k[i]);
+    }
+    printf("\n");
+    return low;
+}
+
+void QSort(int k[],int low,int high){
+    int p;
+    if(low<high){
+        p=Partition(k,low,high);
+        QSort(k,low,p-1);
+        QSort(k,p+1,high);
+    }
+}
+
+main(){
+    scanf("%d",&n);
+    int k[n];
+    for(int i=0;i<n;i++){
+        scanf("%d",&k[i]);
+    }
+    QSort(k,0,n-1);
+}
