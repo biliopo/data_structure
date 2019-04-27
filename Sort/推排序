@@ -1,0 +1,45 @@
+#include <stdio.h>
+
+void HeapSort(int k[],int a,int b){
+    //建立堆，将最大值放在堆顶
+    int temp=k[a];
+    int i;
+    for(i=2*a;i<=b;i*=2){
+        if(i<b&&k[i]<k[i+1]) ++i;
+        if(temp>=k[i]) break;
+        k[a]=k[i];
+        a=i;
+    }
+    k[a]=temp;
+}
+
+main(){
+    int n;
+    scanf("%d",&n);
+    int k[n+1];
+    k[0]=n;
+    for(int i=1;i<=n;i++){
+        scanf("%d",&k[i]);
+    }
+    int j;
+    for(j=n/2;j>0;j--)
+        HeapSort(k,j,k[0]);
+    int q;
+    for(q=1;q<=n;q++){
+        printf("%d ",k[q]);
+    }
+    printf("\n");
+    int m,temp,a;
+    for(m=k[0];m>1;m--){
+        temp=k[m];
+        k[m]=k[1];
+        k[1]=temp;
+        HeapSort(k,1,m-1);
+        //将最大值移动至末尾，除去这个值，进行新的排序将剩下值中最大值移动至堆顶
+        for(a=1;a<=n;a++){
+            printf("%d ",k[a]);
+        }
+        printf("\n");
+    }
+
+}
