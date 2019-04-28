@@ -1,0 +1,49 @@
+#include <stdio.h>
+
+void merge_sort(int list[], int length)
+ {
+     int i, left_min, left_max, right_min, right_max, next;
+     int temp[length];
+
+     for (i = 1; i < length; i *= 2)
+     {
+         for (left_min = 0; left_min < length - i; left_min = right_max)
+        {
+             right_min = left_max = left_min + i;
+             right_max = left_max + i;
+
+             if (right_max > length)
+                 right_max = length;
+
+             next = 0;
+             while (left_min < left_max && right_min < right_max)
+                 temp[next++] = list[left_min] > list[right_min] ? list[right_min++] : list[left_min++];
+
+             while (left_min < left_max)
+                 list[--right_min] = list[--left_max];
+
+             while (next > 0)
+                 list[--right_min] = temp[--next];
+        }
+        int m;
+     for(m=0; m<length; m++){
+        printf("%d ",list[m]);
+     }
+     printf("\n");
+     }
+
+ }
+
+
+ int main()
+ {
+        int n;
+        scanf("%d",&n);
+        int k[n];
+        int m;
+        for(m=0;m<n;m++){
+            scanf("%d",&k[m]);
+        }
+        merge_sort(k, n);
+        return 0;
+ }
