@@ -2,6 +2,8 @@
 
 void merge_sort(int list[], int length)
  {
+     //拆分成两个数组[left_min,left_max],[right_min,right_max]
+     //由下至顶的进行排序
      int i, left_min, left_max, right_min, right_max, next;
      int temp[length];
 
