@@ -1,0 +1,67 @@
+#include<stdio.h>
+#define D 3
+typedef struct node
+{
+    int key;
+    int link;
+} JD;
+
+int radixsort(JD r[],int n)
+{
+    int i,j,k,t,p,rd,rg,f[10],e[10],m;
+    for(i=1; i<n; i++)
+        r[i].link=i+1;
+    r[n].link=0;//构建顺序链表
+    p=1;
+    rd=1;
+    rg=10;
+    for(i=1; i<=D; i++)
+    {
+        for(j=0; j<10; j++)
+        {
+            f[j]=0;
+            e[j]=0;
+        }
+        do
+        {
+            k=(r[p].key%rg)/rd;
+            if(f[k]==0)
+                f[k]=p;
+            else
+                r[e[k]].link=p;
+            e[k]=p;
+            p=r[p].link;
+        }
+        while(p>0);
+        j=0;
+        while(f[j]==0)
+            j++;
+        p=f[j];
+        t=e[j];
+        for(k=j+1; k<10; k++)
+            if(f[k]>0)
+            {
+                r[t].link=f[k];
+                t=e[k];
+            }
+        r[t].link=0;
+        rg*=10;
+        rd*=10;
+        for(m=p;m!=0;m=r[m].link){
+            printf("%03d ",r[m].key);
+        }
+        printf("\n");
+    }
+    return(p);
+}
+
+main(){
+    int n;
+    scanf("%d",&n);
+    JD r[n+1];
+    int i;
+    for(i=1;i<=n;i++){
+        scanf("%d",&r[i].key);
+    }
+    radixsort(r,n);
+}
