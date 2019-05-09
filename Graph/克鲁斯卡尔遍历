@@ -1,0 +1,40 @@
+void minitree_KRUSKAL(void)
+{   int n,i,m,min,k,j;
+    VEX t[M];
+    EDGE  e[M];
+    printf("Input number of vertex and edge:");
+    scanf("%d,%d",&n,&m);
+    for(i=1;i<=n;i++)
+    {   printf("t[%d].data=:",i);
+	scanf("%d",&t[i].data);
+	t[i].jihe=i;
+    }
+    for(i=0;i<m;i++)
+    {   printf("vexh,vext,weight:");
+	scanf("%d,%d,%d",&e[i].vexh,&e[i].vext,&e[i].weight);
+	e[i].flag=0;
+    }
+    i=1;
+    while(i<n)
+    {   min=MAX;
+	for(j=0;j<m;j++)
+	{  if(e[j].weight<min && e[j].flag==0)
+	   {   min=e[j].weight;
+	       k=j;
+	   }
+	}
+	if(t[e[k].vexh].jihe!=t[e[k].vext].jihe)
+	{    e[k].flag=1;
+	     for(j=1;j<=n;j++)
+		if(t[j].jihe==t[e[k].vext].jihe)
+		   t[j].jihe=t[e[k].vexh].jihe;
+	     t[e[k].vext].jihe=t[e[k].vexh].jihe;
+	     i++;
+	}
+	else
+	   e[k].flag=2;
+    }
+    for(i=0;i<m;i++)
+       if(e[i].flag==1)
+	 printf("%d,%d :%d\n",e[i].vexh,e[i].vext,e[i].weight);
+}
