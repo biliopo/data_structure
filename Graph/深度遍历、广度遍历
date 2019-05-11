@@ -209,9 +209,6 @@ void print(char *i)
 void BFSraverse(ALGraph G,void (*Visit)(char*)){
     VisitFunc=Visit;
     int v,u,j;
-    for(v=0;v<G.vexnum;v++){
-        visited[v]=-1;
-    }
     SqQueue Q;
     InitQueue(Q);
     for(v=0;v<G.vexnum;v++){
