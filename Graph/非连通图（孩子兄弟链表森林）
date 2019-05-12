@@ -1,6 +1,6 @@
 typedef struct CSNode{
   ElemType data;
-  struct CSNode* lchild,*nextcibling;
+  struct CSNode* firstchild,*nextcibling;
 }CSNode,*CSTree;
 
 void DFSTree(ALGraph G,int v,CSTree &T)
