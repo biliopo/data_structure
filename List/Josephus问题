@@ -1,0 +1,41 @@
+#include <stdio.h>
+#include <malloc.h>
+//编写算法解决Josephus问题：设有n个人围在一个圆桌周围，
+//现从第s个人开始报数，数到第m个人又出列…如此反复直到所有的人全部出列为只止。
+//Josephus问题是：对于任意给定的n,s和m，求出按出列次序得到的n个人员的序列。
+typedef struct LNode{
+    int data;
+    int point;//标记节点是否被访问过
+    struct LNode *next;
+}LNode,*List;
+
+int main(){
+    int n,s,m;
+    scanf("%d",&n);//N个人
+    scanf("%d",&s);//从S人开始
+    scanf("%d",&m);//每隔M人取一个人
+    List L;
+    L=(List)malloc((n)*sizeof(LNode));
+    int i;
+    for(i=0;i<n;i++){
+        L[i].data=i+1;
+        L[i].point=1;
+        if(i==n-1){
+            L[i].next=&L[0];
+        }
+        else L[i].next = &L[i+1];
+    }//初始化
+    int w=n;
+    s=s-2;//因为第一个节点需要自查，所以后退一步
+    while(w){
+        int q=1;
+        while(q<=m){
+            if(L[(s+q)%n].point!=1) s=(s+1)%n;
+            else q++;
+        }
+        s=(s+q-1)%n;
+        printf("%d ",L[s].data);
+        L[s].point=0;
+        w--;
+    }
+}
