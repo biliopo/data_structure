@@ -21,6 +21,7 @@ next[j]= 1 其他情况
 void get_next(SString T,int next[]){
 // 算法4.7
 // 求模式串T的next函数值并存入数组next
+//此处的i和j与字符匹配时的i和j不同，此处皆指模式串
    int i=1;
    next[1]=0;
    int j=0;
