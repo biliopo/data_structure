@@ -9,6 +9,15 @@
 #define MAXSTRLEN  255 	//用户可在255以内定义最大串长
 typedef unsigned char SString[MAXSTRLEN+1];	//0号单元存放串的长度
 
+/*
+next[j]= 0  if(j=1);
+next[j]= max{k|1<k<j且'p1p2...p(k-1)'=='p(j-k+1)...p(j-1)'} 当此集合不空时
+next[j]= 1 其他情况
+
+模式串和主串匹配时，若匹配成功i和j加1，否则，i不变，j退到next[j]的位置再比较，以此类推。直到两种可能出现：
+一种时j后退后字符匹配相等，i和j加1，继续匹配；一种是j退到0（模式串的第一个字符失配），则将模式串右滑一个字符，重新匹配。
+*/
+
 void get_next(SString T,int next[]){
 // 算法4.7
 // 求模式串T的next函数值并存入数组next
@@ -66,7 +75,7 @@ for( i=1;i<=MAXSTRLEN&&(ch!='\n');i++)    // 录入模式串
   ch=getchar();
 }
 T[0]=i-1;    // T[0]用于存储模式串中字符个数
-pos=Index_KMP(S,T,0);    // 请填空
+pos=Index_KMP(S,T,0);    
 printf("%d\n",pos);
 }
     }
