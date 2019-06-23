@@ -1,0 +1,27 @@
+int  IsCompleteTree( BTree T ) //是完全二叉树，则返回1；否则返回0
+{
+BTree p = T;
+if (p==0) return 1;
+
+Queue Q;
+InitQueue(Q);
+EnQueue(Q, p);
+
+int flag = 0;
+while (!QueueEmpty(Q)) {
+DeQueue(Q, p);
+if (p->lchild && !flag) 
+EnQueue(Q, p->lchild);
+else {
+if (p->lchild) return 0;
+else flag = 1;
+}
+if (p->rchild && !flag) 
+EnQueue(Q, p->rchild);
+else {
+if (p->rchild) return 0;
+else flag = 1;
+} // while
+
+return 1;
+}
